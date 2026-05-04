@@ -8,6 +8,7 @@ public class Inventario : MonoBehaviour
     public itemSlot[] itemSlot;
     PlayerControols controls;
     [SerializeField]public ItemSO[] itensSO; // ItemSO com I maiúsculo
+    [SerializeField] private AudioSource audioSource;
 
     void Awake()
     {
@@ -63,8 +64,8 @@ public class Inventario : MonoBehaviour
             {
                 if (itensSO[i].itemName == itemName)
                 {
-                    itensSO[i].UseItem();
-                    RemoveItem(itemName, 1); // ← remove 1 unidade ao usar
+                    itensSO[i].UseItem(audioSource); // 👈 passa o audioSource
+                    RemoveItem(itemName, 1);
                     break;
                 }
             }

@@ -21,11 +21,23 @@ public class StaminaController : MonoBehaviour
     [SerializeField] private Image staminaProgressUI = null;
     [SerializeField] private CanvasGroup sliderCanvasGroup = null;
 
+    [Header("Som Cansaço")]
+    [SerializeField] private AudioClip somCansado;
+    [SerializeField] private AudioSource audioSourceCansado;
+
     private Personagem playerController;
 
     private void Start()
     {
         playerController = GetComponent<Personagem>();
+
+        if (audioSourceCansado == null)
+            audioSourceCansado = gameObject.AddComponent<AudioSource>();
+
+        audioSourceCansado.clip = null; // não atribui o clip logo
+        audioSourceCansado.loop = true;
+        audioSourceCansado.playOnAwake = false;
+        audioSourceCansado.Stop(); // garante que não toca nada
     }
 
     private void Update()
@@ -35,21 +47,23 @@ public class StaminaController : MonoBehaviour
             if (playerStamina < maxStamina)
             {
                 playerStamina += staminaRegen * Time.deltaTime;
-                playerStamina = Mathf.Clamp(playerStamina, 0, maxStamina); // garante que não passa do máximo
+                playerStamina = Mathf.Clamp(playerStamina, 0, maxStamina);
                 UpdateStamina(1);
 
                 if (playerStamina >= maxStamina)
                 {
                     playerController.SetRunSpeed(normalRunSpeed);
                     sliderCanvasGroup.alpha = 0f;
-                    hasRegenerated = true; // agora só ativa quando está mesmo cheio
+                    hasRegenerated = true;
+                    PararSomCansado(); // stamina cheia, para o som
                 }
             }
-            else if (!hasRegenerated) // segurança extra caso o Clamp já tenha igualado
+            else if (!hasRegenerated)
             {
                 hasRegenerated = true;
                 playerController.SetRunSpeed(normalRunSpeed);
                 sliderCanvasGroup.alpha = 0f;
+                PararSomCansado();
             }
         }
     }
@@ -77,6 +91,7 @@ public class StaminaController : MonoBehaviour
                 hasRegenerated = false;
                 playerController.SetRunSpeed(slowedRunSpeed);
                 sliderCanvasGroup.alpha = 0f;
+                TocarSomCansado(); // stamina zerou, começa o som
             }
         }
         else
@@ -90,8 +105,24 @@ public class StaminaController : MonoBehaviour
     public void ChangeStamina(float valor)
     {
         maxStamina += valor;
-        playerStamina = maxStamina; // opcional: enche a stamina ao aumentar o máximo
+        playerStamina = maxStamina;
         playerStamina = Mathf.Clamp(playerStamina, 0, maxStamina);
         UpdateStamina(1);
+    }
+
+    private void TocarSomCansado()
+    {
+        if (somCansado == null || audioSourceCansado == null) return;
+        if (!audioSourceCansado.isPlaying)
+        {
+            audioSourceCansado.clip = somCansado;
+            audioSourceCansado.Play();
+        }
+    }
+
+    private void PararSomCansado()
+    {
+        if (audioSourceCansado != null && audioSourceCansado.isPlaying)
+            audioSourceCansado.Stop();
     }
 }

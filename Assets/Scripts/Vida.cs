@@ -29,6 +29,7 @@ public class Vida : MonoBehaviour
         source.spatialBlend = 1;
         source.clip = clip;
     }
+
     // Função que retira vida da personagem e deteta se morreu
     public void perdeVida(int valor)
     {
@@ -39,8 +40,7 @@ public class Vida : MonoBehaviour
             isDead = true;
         }
         AtualizaVida();
-        source.Play();
-        // source.PlayOneShot(clip);
+        source.PlayOneShot(clip);
     }
     //Função que adiciona vida á personagem respeitando o maxVida
     public void ganhaVida(int valor)

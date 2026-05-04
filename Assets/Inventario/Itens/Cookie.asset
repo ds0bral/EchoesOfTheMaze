@@ -15,3 +15,4 @@ MonoBehaviour:
   itemName: Cookie
   statToChange: 0
   statChangeAmount: 15
+  useSound: {fileID: 8300000, guid: cae430649a2a915448245448e0f9d45c, type: 3}

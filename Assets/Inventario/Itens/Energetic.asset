@@ -15,3 +15,4 @@ MonoBehaviour:
   itemName: Energetic
   statToChange: 1
   statChangeAmount: 5
+  useSound: {fileID: 8300000, guid: 6554c6bb53fa7f248964faf85e8a92be, type: 3}

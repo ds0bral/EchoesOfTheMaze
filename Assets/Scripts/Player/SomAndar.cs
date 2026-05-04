@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class SomAndar : MonoBehaviour
 {
-    [SerializeField] AudioClip _somPassos;
-    [SerializeField] AudioClip _somPassosCorrer;
+    [SerializeField] AudioClip[] _somPassos;
+    [SerializeField] AudioClip[] _somPassosCorrer;
     AudioSource _audioSource;
     float _ultimoSom = 0f;
     [SerializeField] float _cooldown = 0.15f;
@@ -31,19 +31,19 @@ public class SomAndar : MonoBehaviour
         TocarSom(_somPassosCorrer);
     }
 
-    void TocarSom(AudioClip clip)
+    void TocarSom(AudioClip[] clips)
     {
-        if (_audioSource == null || clip == null) return;
+        if (_audioSource == null || clips == null || clips.Length == 0) return;
         if (Time.time - _ultimoSom < _cooldown) return;
 
         _ultimoSom = Time.time;
-        _audioSource.pitch = Random.Range(0.9f, 1.1f); // varia ligeiramente o tom
-        _audioSource.PlayOneShot(clip);
+        _audioSource.pitch = Random.Range(0.9f, 1.1f);
+        _audioSource.PlayOneShot(clips[Random.Range(0, clips.Length)]);
     }
 
-    public void PararSom()
-    {
-        if (_audioSource != null && _audioSource.isPlaying)
-            _audioSource.Stop();
-    }
+    //public void PararSom()
+    //{
+    //    if (_audioSource != null && _audioSource.isPlaying)
+    //        _audioSource.Stop();
+    //}
 }

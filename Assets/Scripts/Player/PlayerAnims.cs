@@ -22,23 +22,23 @@ public class PlayerAnims : MonoBehaviour
         _animator.SetFloat(_velocidadeHash, velocidade, 0.1f, Time.deltaTime);
 
         // Para o som quando está parado
-        if (velocidade == 0f && _somAndar != null)
-            _somAndar.PararSom();
+        //if (velocidade == 0f && _somAndar != null)
+            //_somAndar.PararSom();
     }
 
     float CalcularVelocidadeAnim()
     {
-        float y = _playerMovement.Movimento.y;
+        Vector2 mov = _playerMovement.Movimento;
 
-        if (y < -0.1f)
+        if (mov.sqrMagnitude < 0.01f)
+            return 0f; // idle
+
+        if (mov.y < -0.1f)
             return -1f; // andar para trás
 
-        if (y < 0.1f)
-            return 0f;  // idle
-
         if (_playerMovement.EstaACorrer)
-            return 2f;  // correr
+            return 2f; // correr
 
-        return 1f;      // andar para a frente
+        return 1f; // andar (frente, esquerda ou direita)
     }
 }
