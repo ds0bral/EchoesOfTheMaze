@@ -5,6 +5,7 @@ public class SomAndar : MonoBehaviour
     [SerializeField] AudioClip[] _somPassos;
     [SerializeField] AudioClip[] _somPassosCorrer;
     AudioSource _audioSource;
+    [SerializeField]  float volume = 1f;
     float _ultimoSom = 0f;
     [SerializeField] float _cooldown = 0.15f;
 
@@ -19,6 +20,7 @@ public class SomAndar : MonoBehaviour
         _audioSource.loop = false;
         _audioSource.playOnAwake = false;
         _audioSource.spatialBlend = 1f;
+        _audioSource.volume = volume;
     }
 
     public void SomPassos()

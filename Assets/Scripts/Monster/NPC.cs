@@ -94,38 +94,45 @@ public class NPC : MonoBehaviour
 
     void attackStatus()
     {
-        agent.isStopped = false;
-        agent.speed = speed * 1.5f;
-        if (animator != null)
-            animator.SetFloat("Movimento", 0.5f); // Animação para andar
-
-        // Rodar para o Player (ignorando o Y)
-        Vector3 direction = new Vector3(Player.transform.position.x, transform.position.y, Player.transform.position.z);
-        transform.LookAt(direction);
-
         if (Vector3.Distance(transform.position, Player.transform.position) < distAtaca)
         {
-            // Perto o suficiente para atacar
             agent.isStopped = true;
             agent.velocity = Vector3.zero;
+            agent.speed = 0;
+
+            Vector3 direction = new Vector3(Player.transform.position.x, transform.position.y, Player.transform.position.z);
+            transform.LookAt(direction);
+
+            if (animator != null)
+                animator.SetFloat("Movimento", 0);
 
             if (Time.time > intervaloAtual)
             {
                 intervaloAtual = Time.time + intervaloAtacar;
                 if (animator != null)
-                    animator?.SetTrigger("Attack"); // Animação para atacar
-                Player.GetComponent<Vida>().perdeVida(tiraVida);
+                    animator.SetTrigger("Attack");
             }
         }
         else
         {
-            // Perseguir o player
             agent.isStopped = false;
+            agent.speed = speed * 1.5f;
             agent.SetDestination(Player.transform.position);
             if (animator != null)
-                animator.SetFloat("Movimento", 1); // Animação de correr
+                animator.SetFloat("Movimento", 1);
         }
     }
+
+    // Este método é chamado pelo Animation Event "Atacar"
+    public void Atacar()
+    {
+        if (Player != null && Vector3.Distance(transform.position, Player.transform.position) < distAtaca)
+        {
+            agent.isStopped = true;
+            Player.GetComponent<Vida>().perdeVida(tiraVida);
+        }
+    }
+
     bool vePlayer()
     {
         if (Vector3.Distance(transform.position, Player.transform.position) > distVisao)
@@ -173,7 +180,6 @@ public class NPC : MonoBehaviour
                 {
                     attackStatus();
                     tempoAEspera = tempoEspera;
-
                 }
                 else
                 {

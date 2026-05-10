@@ -8,6 +8,7 @@ public class PlayerInteract : MonoBehaviour
 
     IInteract objetoAtual = null;
     ILerNota notaAtual = null;
+    IInteractMessage mensagemAtual = null; // nova linha
     bool notaAberta = false;
 
     void Awake()
@@ -30,7 +31,6 @@ public class PlayerInteract : MonoBehaviour
 
     void Update()
     {
-        // Se a nota está aberta, não faz raycast — mantém a referência
         if (!notaAberta)
         {
             Vector3 origem = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.5f));
@@ -40,10 +40,15 @@ public class PlayerInteract : MonoBehaviour
             {
                 var novoObjeto = hit.collider.GetComponent<IInteract>();
                 var novaNota = hit.collider.GetComponent<ILerNota>();
+                var mensagemObj = hit.collider.GetComponent<IInteractMessage>();
 
                 if (novaNota != null && novaNota != notaAtual)
                     SistemaMensagem.instance.MostrarMensagem("Prima X para ler a nota");
 
+                if (mensagemObj != null && mensagemObj != mensagemAtual)
+                    SistemaMensagem.instance.MostrarMensagem(mensagemObj.Mensagem());
+
+                mensagemAtual = mensagemObj;
                 objetoAtual = novoObjeto;
                 notaAtual = novaNota;
             }
@@ -51,6 +56,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 objetoAtual = null;
                 notaAtual = null;
+                mensagemAtual = null;
             }
         }
 
@@ -61,7 +67,7 @@ public class PlayerInteract : MonoBehaviour
         {
             notaAtual?.LerNota();
             if (notaAtual != null)
-                notaAberta = !notaAberta; // sincroniza com o estado do painel
+                notaAberta = !notaAberta;
         }
     }
 }

@@ -102,6 +102,7 @@ public class Inventario : MonoBehaviour
             {
                 itemSlot[i].quantity += quantity;
                 itemSlot[i].QuantityText.text = itemSlot[i].quantity.ToString();
+                SistemaMensagem.instance.MostrarMensagem(itemName, quantity); // adiciona aqui
                 return;
             }
         }
@@ -111,6 +112,7 @@ public class Inventario : MonoBehaviour
             if (string.IsNullOrEmpty(itemSlot[i].itemName))
             {
                 itemSlot[i].AddItem(itemName, quantity, itemIcon, itemDescription);
+                SistemaMensagem.instance.MostrarMensagem(itemName, quantity); // e aqui
                 return;
             }
         }

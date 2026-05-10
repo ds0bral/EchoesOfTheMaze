@@ -7,6 +7,8 @@ public class ItemSO : ScriptableObject
     public string itemName;
     public StatToChange statToChange;
     public int statChangeAmount;
+    public StatToChange stat2ToChange;
+    public float stat2ChangeAmount;
     public AudioClip useSound; // 👈 arrasta o som aqui no Inspector
 
     public void UseItem(AudioSource audioSource) // 👈 recebe o AudioSource

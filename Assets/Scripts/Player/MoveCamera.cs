@@ -7,12 +7,13 @@ public class MoveCamera : MonoBehaviour
     PlayerControols controls;
 
     [Header("Camera Settings")]
-    [SerializeField] float sensibilidade = 0.3f;
+    float sensibilidade = 0.3f;
     [SerializeField] float suavizacao = 8f;
 
     Vector2 rotacaoCamera;
     Vector2 rotacaoAlvo;
-    bool _ignorarInput = false; // ← ADD THIS
+    bool _ignorarInput = false;
+    bool invertY = false;
 
     void Awake()
     {
@@ -37,11 +38,14 @@ public class MoveCamera : MonoBehaviour
         player = transform.parent.gameObject;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        sensibilidade = PlayerPrefs.GetFloat("masterSen", 0.3f);
+        invertY = PlayerPrefs.GetInt("masterInvertY", 0) == 1;
     }
 
     void LateUpdate()
     {
-        if (Time.timeScale == 0f) return; // Pausado: sai sem tocar em nada
+    if (Time.timeScale == 0f) return;
 
         if (_ignorarInput)
         {
@@ -52,7 +56,7 @@ public class MoveCamera : MonoBehaviour
         Vector2 lookInput = controls.Gameplay.mouse.ReadValue<Vector2>();
 
         rotacaoAlvo.x += lookInput.x * sensibilidade;
-        rotacaoAlvo.y -= lookInput.y * sensibilidade;
+        rotacaoAlvo.y += (invertY ? lookInput.y : -lookInput.y) * sensibilidade; // ← invertY aplicado
         rotacaoAlvo.y = Mathf.Clamp(rotacaoAlvo.y, -60f, 60f);
 
         rotacaoCamera = Vector2.Lerp(rotacaoCamera, rotacaoAlvo, suavizacao * Time.deltaTime);
@@ -61,12 +65,18 @@ public class MoveCamera : MonoBehaviour
         player.transform.rotation = Quaternion.Euler(0f, rotacaoCamera.x, 0f);
     }
 
+    public void AtualizarDefinicoes() // ← novo
+    {
+        sensibilidade = PlayerPrefs.GetFloat("masterSen", 0.3f);
+        invertY = PlayerPrefs.GetInt("masterInvertY", 0) == 1;
+    }
+
     public void SincronizarRotacao()
     {
         rotacaoAlvo = rotacaoCamera;
     }
 
-    public void IgnorarInputPorUmFrame() // ← ADD THIS
+    public void IgnorarInputPorUmFrame()
     {
         _ignorarInput = true;
     }

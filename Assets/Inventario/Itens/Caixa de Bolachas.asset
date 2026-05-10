@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27d38f7b8c64e3843a0ba2ba34bfa9b0, type: 3}
-  m_Name: Cookie
+  m_Name: Caixa de Bolachas
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Cookie
+  itemName: Caixa de Bolachas
   statToChange: 0
   statChangeAmount: 15
   useSound: {fileID: 8300000, guid: cae430649a2a915448245448e0f9d45c, type: 3}

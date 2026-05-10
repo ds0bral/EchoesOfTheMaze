@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27d38f7b8c64e3843a0ba2ba34bfa9b0, type: 3}
-  m_Name: Energetic
+  m_Name: Barra de proteina
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Energetic
+  itemName: "Barra de Prote\xEDna"
   statToChange: 1
-  statChangeAmount: 5
-  useSound: {fileID: 8300000, guid: 6554c6bb53fa7f248964faf85e8a92be, type: 3}
+  statChangeAmount: 10
+  stat2ToChange: 0
+  stat2ChangeAmount: 20
+  useSound: {fileID: 8300000, guid: 16f01b20baa4b62478e24d5865aea307, type: 3}

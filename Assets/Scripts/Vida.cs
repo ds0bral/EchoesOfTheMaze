@@ -1,5 +1,9 @@
-using UnityEngine;
 using System;
+using Unity.VisualScripting;
+using UnityEngine;
+using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 /// <summary>
 /// Script que implementa o mecanismo de vida de uma personagem
 /// </summary>
@@ -10,11 +14,14 @@ public class Vida : MonoBehaviour
     public int maxVida = 100; // Indica a vida com que a personagem começa o nível
     public int vidaAtual = 0;
     public bool isDead = false;
+    public event Action OnMorreu;
     public event Action<int> OnPerdeuVida; // Evento para notificar mudanças na vida
 
     // Audio
     AudioSource source;
-    [SerializeField] AudioClip clip;
+    [SerializeField] AudioClip[] clip;
+    float ultimoSom = 0f;
+    [SerializeField] float cooldown = 0.15f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,7 +34,16 @@ public class Vida : MonoBehaviour
         source.loop = false;
         source.playOnAwake = false;
         source.spatialBlend = 1;
-        source.clip = clip;
+    }
+
+    void TocarSom(AudioClip[] clips)
+    {
+        if (source == null || clips == null || clips.Length == 0) return;
+        if (Time.time - ultimoSom < cooldown) return;
+
+        ultimoSom = Time.time;
+        source.pitch = Random.Range(0.9f, 1.1f);
+        source.PlayOneShot(clips[Random.Range(0, clips.Length)]);
     }
 
     // Função que retira vida da personagem e deteta se morreu
@@ -37,10 +53,14 @@ public class Vida : MonoBehaviour
         if (vidaAtual <= 0)
         {
             vidaAtual = 0;
-            isDead = true;
+            if (!isDead) // evita chamar duas vezes
+            {
+                isDead = true;
+                OnMorreu?.Invoke();
+            }
         }
         AtualizaVida();
-        source.PlayOneShot(clip);
+        TocarSom(clip);
     }
     //Função que adiciona vida á personagem respeitando o maxVida
     public void ganhaVida(int valor)
